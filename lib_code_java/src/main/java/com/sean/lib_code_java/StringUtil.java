@@ -1,4 +1,4 @@
-package com.sean.codeutillib;
+package com.sean.lib_code_java;
 
 public class StringUtil {
     public static boolean isNullOrEmpty(String str){

@@ -1,4 +1,4 @@
-package com.sean.codeutillib;
+package com.sean.lib_code_java;
 
 import android.app.Activity;
 import android.content.Context;
