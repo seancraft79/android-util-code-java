@@ -1,1 +1,1 @@
-include ':app', ':codeutillib'
+include ':app', ':lib_code_java'
