@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.sean.lib_code_java.FileUtil;
 import com.sean.lib_code_java.ParseUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,8 +15,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String testStr = "10";
-        int parsed = ParseUtil.parseStringToInt(testStr, -1);
-        Log.d("DEBUG", "TestParsed ========> " + parsed);
+        /**   TEST FILEUTIL **/
+//        FileUtil.createFileInExternalStorage(getApplicationContext(), "TestFolder10", "mytest2.txt", "");
+        Log.d("DEBUG", "isSeanFolder? : " + FileUtil.isFileExist(getApplicationContext(), "MySean"));
+        FileUtil.createFolderInExternalStorage(getApplicationContext(), "MySean");
+        Log.d("DEBUG", "isSeanFolder2? : " + FileUtil.isFileExist(getApplicationContext(), "MySean"));
+
+
     }
 }
