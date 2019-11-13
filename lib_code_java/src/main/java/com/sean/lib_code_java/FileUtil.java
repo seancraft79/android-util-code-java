@@ -9,6 +9,10 @@ import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Create by Sean 2019/11/13
+ */
+
 public class FileUtil {
 
     public static boolean storeProperty(Context context, String filePath, Map<String, String> property, String storeComment) throws Exception {
