@@ -1,5 +1,8 @@
 package com.sean.lib_code_java;
 
+import java.util.Iterator;
+import java.util.Map;
+
 public class StringUtil {
     public static boolean isNullOrEmpty(String str){
 
@@ -22,5 +25,21 @@ public class StringUtil {
 
         }
         return withoutspaces;
+    }
+
+    public static String getJsonString(Map<String, String> data) {
+        String json = "{";
+
+        Iterator<Map.Entry<String, String>> iterator = data.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
+            json += "'" + entry.getKey() + "':'" + entry.getValue() + "'";
+
+            if(iterator.hasNext()) json += ",";
+        }
+
+        json += "}";
+
+        return json;
     }
 }
