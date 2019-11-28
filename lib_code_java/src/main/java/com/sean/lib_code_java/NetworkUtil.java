@@ -12,17 +12,16 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.List;
 
+@SuppressWarnings({"MissingPermission", "deprecation"})
 public abstract class NetworkUtil {
     private static final String TAG = "NetworkUtil";
 
     final String SECURETYPE_WEP = "WEP";
     final String SECURETYPE_WPA = "WPA";
 
-    private Context mContext;
     private ConnectivityManager connManager;
     private NetworkInfo mNetworkInfo;
     WifiManager wifiManager;
@@ -35,7 +34,6 @@ public abstract class NetworkUtil {
         return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public NetworkInfo getNetworkInfo(Context context) {
         ConnectivityManager cm = getConnectivityManager(context);
         if(cm != null) return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -57,7 +55,6 @@ public abstract class NetworkUtil {
 
     protected abstract void doWithScanResult();
 
-    @SuppressWarnings({"MissingPermission"})
     public void initWifiScan(Context context) {
         try {
 
@@ -76,7 +73,6 @@ public abstract class NetworkUtil {
         }
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public void clearWifiList() throws Exception {
         try {
             int networkId = wifiManager.getConnectionInfo().getNetworkId();
@@ -97,13 +93,11 @@ public abstract class NetworkUtil {
         }
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public void wifiClearRescan() throws Exception {
         clearWifiList();
         wifiManager.startScan();
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public void disconnect() throws Exception {
 
         try {
@@ -116,7 +110,6 @@ public abstract class NetworkUtil {
         }
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public boolean connect(String networkSSID, String networkPass) {
 
         Log.d(TAG, "=== START CONNECT SSID : " + networkSSID + ", pass : " + networkPass);
@@ -224,7 +217,6 @@ public abstract class NetworkUtil {
         return false;
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public int getExistingNetworkId(String SSID) {
         List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
         if (configuredNetworks != null) {
@@ -237,7 +229,6 @@ public abstract class NetworkUtil {
         return -1;
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public String getCurrentSsid(Context context) {
         String ssid = null;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -257,7 +248,6 @@ public abstract class NetworkUtil {
         return ssid;
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public boolean isWifiConnected(Context context) {
 
         NetworkInfo activeNetwork = getNetworkInfo(context);
@@ -270,7 +260,6 @@ public abstract class NetworkUtil {
         return wifi.isWifiEnabled();
     }
 
-    @SuppressWarnings({"MissingPermission"})
     public String intToInetAddress() {
         int hostAddress = wifiManager.getDhcpInfo().serverAddress;
         byte[] addressBytes = {(byte) (0xff & hostAddress),
@@ -296,7 +285,6 @@ public abstract class NetworkUtil {
         return false;
     }
 
-    @SuppressWarnings({"MissingPermission"})
     String getConnectedSSID() {
         WifiInfo info = wifiManager.getConnectionInfo();
         String cssid = info.getSSID();
@@ -307,7 +295,6 @@ public abstract class NetworkUtil {
         return "";
     }
 
-    @SuppressWarnings({"MissingPermission"})
     String getSecureType(String networkSSID) {
         List<ScanResult> scanResult = wifiManager.getScanResults();
         for (int i = 0; i < scanResult.size(); i++) {
@@ -322,6 +309,7 @@ public abstract class NetworkUtil {
         return "";
     }
 
+    /** String util functions **/
     static boolean isNullOrEmpty(String str){
 
         if(str == null || str.isEmpty() || str.length() < 1)
