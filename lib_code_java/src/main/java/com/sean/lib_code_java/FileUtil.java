@@ -88,4 +88,42 @@ public class FileUtil {
         }
         return dir;
     }
+
+    public static boolean renameFile(File filename, File newFilename) throws Exception {
+        boolean flag = false;
+
+        try {
+            if (filename.exists()) {
+                filename.renameTo(newFilename);
+                flag = true;
+            } else {
+                flag = false;
+            }
+        } catch (Exception e) {
+            e.getStackTrace();
+            flag = false;
+        }
+
+        return flag;
+    }
+
+    private boolean isSDCardAvailable(boolean requireWriteAccess) throws Exception {
+        String state = Environment.getExternalStorageState();
+        boolean check = false;
+        try {
+
+            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                check = true;
+            } else if (!requireWriteAccess &&
+                    Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+                check = true;
+            }
+
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+
+        return check;
+    }
+
 }
