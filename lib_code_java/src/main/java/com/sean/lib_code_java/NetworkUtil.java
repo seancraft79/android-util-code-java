@@ -274,7 +274,7 @@ public abstract class NetworkUtil {
         }
     }
 
-    boolean isConnected(String ssid) {
+    public boolean isConnected(String ssid) {
         String cssid = getConnectedSSID();
         if (!com.sean.lib_code_java.StringUtil.isNullOrEmpty(cssid)) {
 
@@ -307,6 +307,14 @@ public abstract class NetworkUtil {
             }
         }
         return "";
+    }
+
+    // numberOfLevels : 신호강도표시 단계
+    public int getWifiSignalLevel(Context context, int numberOfLevels) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+        return level;
     }
 
     /** String util functions **/
