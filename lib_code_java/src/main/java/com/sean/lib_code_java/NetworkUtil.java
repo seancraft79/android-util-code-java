@@ -295,6 +295,15 @@ public abstract class NetworkUtil {
         return "";
     }
 
+    public int getIpAddress() {
+        return wifiManager.getConnectionInfo().getIpAddress();
+    }
+
+    public int getIpAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        return wifiManager.getConnectionInfo().getIpAddress();
+    }
+
     String getSecureType(String networkSSID) {
         List<ScanResult> scanResult = wifiManager.getScanResults();
         for (int i = 0; i < scanResult.size(); i++) {
