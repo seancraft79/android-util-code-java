@@ -309,11 +309,18 @@ public abstract class NetworkUtil {
         return "";
     }
 
+    // 신호강도
+    public int getWifiRssi(Context context) {
+        if(wifiManager == null)
+            wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        return wifiInfo.getRssi();
+    }
+
     // numberOfLevels : 신호강도표시 단계
     public int getWifiSignalLevel(Context context, int numberOfLevels) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+        int rssi = getWifiRssi(context);
+        int level = WifiManager.calculateSignalLevel(rssi, numberOfLevels);
         return level;
     }
 
