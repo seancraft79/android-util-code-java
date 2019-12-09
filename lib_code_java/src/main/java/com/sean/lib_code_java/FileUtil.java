@@ -26,7 +26,7 @@ public class FileUtil {
     }
 
     public static boolean storeProperty(Context context, String filePath, Properties properties, String storeComment) throws Exception {
-        String dir = getFileDirectory(context);
+        String dir = getExternalFileDirectory(context);
         if(dir.isEmpty()) return false;
 
         FileOutputStream fos = new FileOutputStream(dir + filePath, false);
@@ -36,7 +36,7 @@ public class FileUtil {
     }
 
     public static boolean createFolderInExternalStorage(Context context, String folderPath) {
-        File file = new File(getFileDirectory(context) + File.separator + folderPath);
+        File file = new File(getExternalFileDirectory(context) + File.separator + folderPath);
 
         if (!file.exists())
         {
@@ -46,7 +46,7 @@ public class FileUtil {
     }
 
     public static void createFileInExternalStorage(Context context, String folderPath, String fileName, String data) {
-        File file = new File(getFileDirectory(context) + File.separator + folderPath);
+        File file = new File(getExternalFileDirectory(context) + File.separator + folderPath);
 
         if (!file.exists())
         {
@@ -71,14 +71,21 @@ public class FileUtil {
         return false;
     }
 
-    public static boolean isFileExist(Context context, String filePath) {
+    public static boolean isFullPathFileExistInExternalDirectory(String fileName) {
 
-        String dir = getFileDirectory(context);
-        File file = new File(dir, filePath);
+        File file = new File(fileName);
         return file.exists();
     }
 
-    public static String getFileDirectory(Context context) {
+    public static boolean isFileExistInExternalDirectory(Context context, String filePath) {
+
+        String dir = getExternalFileDirectory(context);
+        File file = new File(dir + filePath);
+        return file.exists();
+    }
+
+    @SuppressWarnings("depricated")
+    public static String getExternalFileDirectory(Context context) {
         String dir = "";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dir = context.getExternalFilesDir(null).getAbsolutePath();
