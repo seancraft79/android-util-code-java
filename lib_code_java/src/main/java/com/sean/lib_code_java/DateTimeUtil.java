@@ -26,4 +26,25 @@ public class DateTimeUtil {
         String time = sdf.format(date);
         return time;
     }
+
+    static String getYM() {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        return sdf.format(date);
+    }
+
+    static String getToday() {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        return sdf.format(date);
+    }
+
+    static String getDayAgo(int dayAgo) {
+        long DAY_IN_MS = 1000 * 60 * 60 * 24;
+        Date date = new Date(System.currentTimeMillis() - (dayAgo * DAY_IN_MS));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
 }
