@@ -125,6 +125,16 @@ public class AppUtil {
         return result;
     }
 
+    public static boolean isPackageInstalled(Context context, String packageName) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            pm.getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
     /** Interface **/
     public interface InstallAppCallBack {
         void onResult(int result);
