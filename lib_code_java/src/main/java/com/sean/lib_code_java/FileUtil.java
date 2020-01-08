@@ -207,6 +207,65 @@ public class FileUtil {
         return deletedFileNames;
     }
 
+    public static List<String> deleteAllFilesInFolder(final String folderPath, String[] avoidFileNames, String[] avoidExtensions) {
+
+        List<String> deletedFileNames = null;
+
+        final File folder = new File(folderPath);
+        final File[] files = folder.listFiles();
+
+        if(files != null && files.length > 0) {
+
+            List<File> filteredFiles = new ArrayList<>();
+            deletedFileNames = new ArrayList<>();
+
+            for (int i = 0; i < files.length; i++) {
+                String fileName = files[i].getName();
+
+                try {
+                    String canonicalPath = files[i].getCanonicalPath();
+                    final int firstIndex = canonicalPath.indexOf(".");
+                    String fileExt = canonicalPath.substring(firstIndex + 1).toLowerCase();
+
+                    boolean isAvoidNameIncluded = false;
+                    if(avoidFileNames != null && avoidFileNames.length > 0) {
+                        for (int k = 0; k < avoidFileNames.length; k++) {
+                            if(canonicalPath.contains(avoidFileNames[k])) {
+                                isAvoidNameIncluded = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    boolean isAvoidExtIncluded = false;
+                    for (int k = 0; k < avoidExtensions.length; k++) {
+                        if(fileExt.contains(avoidExtensions[k])) {
+                            isAvoidExtIncluded = true;
+                            break;
+                        }
+                    }
+
+                    boolean isDirectory = files[i].isDirectory();
+                    if(!isAvoidNameIncluded && !isAvoidExtIncluded && !isDirectory){
+                        filteredFiles.add(files[i]);
+                    }
+
+                } catch (Exception e) {
+                }
+            }
+
+            if(filteredFiles.size() > 0) {
+                for (int i = 0; i < filteredFiles.size(); i++) {
+                    String fileToDelete = filteredFiles.get(i).getName();
+
+                    if(filteredFiles.get(i).delete())
+                        deletedFileNames.add(fileToDelete);
+                }
+            }
+        }
+        return deletedFileNames;
+    }
+
     static String getDayAgo(int dayAgo) {
         long DAY_IN_MS = 1000 * 60 * 60 * 24;
         Date date = new Date(System.currentTimeMillis() - (dayAgo * DAY_IN_MS));
