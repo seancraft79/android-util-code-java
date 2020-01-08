@@ -207,6 +207,13 @@ public class FileUtil {
         return deletedFileNames;
     }
 
+    /**
+     * 지정한 폴더 안에서 피해야 할 파일을 제외한 모든 파일 삭제
+     * @param folderPath : 폴더
+     * @param avoidFileNames : 삭제하지 말아야 할 파일이름
+     * @param avoidExtensions : 삭제하지 말아야 할 확장자
+     * @return
+     */
     public static List<String> deleteAllFilesInFolder(final String folderPath, String[] avoidFileNames, String[] avoidExtensions) {
 
         List<String> deletedFileNames = null;
@@ -220,8 +227,6 @@ public class FileUtil {
             deletedFileNames = new ArrayList<>();
 
             for (int i = 0; i < files.length; i++) {
-                String fileName = files[i].getName();
-
                 try {
                     String canonicalPath = files[i].getCanonicalPath();
                     final int firstIndex = canonicalPath.indexOf(".");
