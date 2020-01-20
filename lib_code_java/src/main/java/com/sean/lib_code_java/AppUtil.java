@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Environment;
@@ -12,11 +13,15 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.List;
 
 public class AppUtil {
+    private static final String TAG = "AppUtil";
 
     /**
      * 특정 패키지명의 앱 실행(설치여부 확인후 실행필요)
@@ -30,7 +35,7 @@ public class AppUtil {
     /**
      * 특정 패키지명의 앱 설치 여부 체크업
      **/
-    public static boolean searchAppPackage(Context context, String packageName) {
+    public static boolean isPackageInstalled(Context context, String packageName) {
         boolean bExist = false;
 
         /** 패키지 정보 리스트 추출 **/
@@ -41,15 +46,18 @@ public class AppUtil {
         mAppList = pkgMgr.queryIntentActivities(mainIntent, 0);
 
         /** 패키지 리스트 순회하면서 특정 패키지명 검색 **/
-        try {
-            for (int i = 0; i < mAppList.size(); i++) {
-                if (mAppList.get(i).activityInfo.packageName.startsWith(packageName)) {
-                    bExist = true;
-                    break;
+        if(mAppList != null && mAppList.size() > 0) {
+            try {
+                for (int i = 0; i < mAppList.size(); i++) {
+                    if (mAppList.get(i).activityInfo.packageName.startsWith(packageName)) {
+                        Log.d(TAG, "isPackageInstalled found : " + mAppList.get(i).activityInfo.packageName);
+                        bExist = true;
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                bExist = false;
             }
-        } catch (Exception e) {
-            bExist = false;
         }
         return bExist;
     }
@@ -125,18 +133,128 @@ public class AppUtil {
         return result;
     }
 
-    public static boolean isPackageInstalled(Context context, String packageName) {
-        try {
-            PackageManager pm = context.getPackageManager();
-            pm.getPackageInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
+    public static boolean installPackage(final String filePath) {
+        Log.d(TAG, "installPackage filePath : " + filePath);
+
+        if(StringUtil.isNullOrEmpty(filePath) || filePath.equalsIgnoreCase("null")) {
+            Log.d(TAG, "installPackage apk file name is not valid");
             return false;
         }
+
+        try {
+            final String command = "pm install -r " + filePath;
+
+            try {
+
+                Process proc = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
+                proc.waitFor();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                int read;
+                char[] buffer = new char[64];
+                StringBuffer output = new StringBuffer();
+                while ((read = reader.read(buffer)) > 0) {
+                    output.append(buffer, 0, read);
+                }
+                reader.close();
+
+                Log.d(TAG, "install app output : " + output.toString());
+                if (output.toString().contains("Success")) {
+                    return true;
+                }
+
+            } catch (Exception e) {
+                Log.e(TAG, "installPackage error : " + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "installPackage error : " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean uninstallPackage(final String packageName) {
+        Log.d(TAG, "uninstallPackage : " + packageName);
+        try {
+
+            final String command = "pm uninstall " + packageName;
+
+            try {
+
+                Process proc = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
+                proc.waitFor();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                int read;
+                char[] buffer = new char[64];
+                StringBuffer output = new StringBuffer();
+                while ((read = reader.read(buffer)) > 0) {
+                    output.append(buffer, 0, read);
+                }
+                reader.close();
+
+                Log.d(TAG, "uninstall app output : " + output.toString());
+                if (output.toString().contains("Success")) {
+                    return true;
+
+                } else {
+                    Log.e(TAG, "uninstall app failed");
+                }
+
+            } catch (Exception e) {
+                Log.e(TAG, "uninstall app failed");
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "uninstall app error : " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static String writeApkToSdcardFolder(Context context, final String extFolderPath, final String apkFileName) {
+
+        try {
+            File folderPath = new File(extFolderPath);
+
+            final String apkFilePath = folderPath.getAbsolutePath() + File.separator + apkFileName;
+
+            File file = new File(apkFilePath);
+
+            // 경로에 DB 가 없으면 리소스에서 가져와서 Write
+            if(!file.exists()) {
+                Log.d(TAG, "File doesnt exist create one");
+
+                InputStream inputStream = context.getAssets().open(apkFileName);
+                OutputStream outputStream = new FileOutputStream(apkFilePath);
+                byte[] mBuffer = new byte[1024];
+                int len;
+                while ((len = inputStream.read(mBuffer)) > 0)
+                    outputStream.write(mBuffer, 0, len);
+
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+
+                Log.d(TAG, "writeApkToSdcardFolder : " + apkFilePath);
+                return apkFilePath;
+
+            } else {
+                Log.e(TAG,"writeApkToSdcardFolder apk already exist");
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG,"writeApkToSdcardFolder error : " + e.getMessage());
+        }
+        return null;
     }
 
     /** Interface **/
     public interface InstallAppCallBack {
         void onResult(int result);
+    }
+
+    public interface InstallPackageCallBack {
+        void onResult(boolean result);
     }
 }
