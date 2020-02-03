@@ -11,7 +11,7 @@ public class DateTimeUtil {
         return formatter.format(date);
     }
 
-    private String getNowDay() {
+    public static String getNowDay() {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -19,7 +19,7 @@ public class DateTimeUtil {
         return time;
     }
 
-    private String getNowTime() {
+    public static String getNowTime() {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
@@ -27,21 +27,21 @@ public class DateTimeUtil {
         return time;
     }
 
-    static String getYM() {
+    public static String getYM() {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         return sdf.format(date);
     }
 
-    static String getToday() {
+    public static String getToday() {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat sdf = new SimpleDateFormat("dd");
         return sdf.format(date);
     }
 
-    static String getDayAgo(int dayAgo) {
+    public static String getDayAgo(int dayAgo) {
         long DAY_IN_MS = 1000 * 60 * 60 * 24;
         Date date = new Date(System.currentTimeMillis() - (dayAgo * DAY_IN_MS));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
