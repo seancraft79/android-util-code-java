@@ -47,4 +47,18 @@ public class DateTimeUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
+
+    public static String getMonth() {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM");
+        return sdf.format(date);
+    }
+
+    public static String getYear() {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        return sdf.format(date);
+    }
 }
