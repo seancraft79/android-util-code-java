@@ -277,4 +277,13 @@ public class FileUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
+
+    /**
+     * Get file parent path without extension
+     * @param filePath
+     * @return : ex. /storage/emulated/0/DCIM/Sysgen/IMG_20200316_141027.jpg -> /storage/emulated/0/DCIM/Sysgen/IMG_20200316_141027
+     */
+    public static String getPathWithoutExtension(String filePath) {
+        return filePath.substring(0, filePath.lastIndexOf("."));
+    }
 }
