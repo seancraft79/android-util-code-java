@@ -14,4 +14,12 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void ipStringText() {
+//        String ip = "192.168.1.73:8081";
+        String ip = "http://192.168.1.73:8081";
+        String resultIp = RegexPatternHelper.getIpFromString(ip);
+        assertEquals("192.168.1.73", resultIp);
+    }
 }
