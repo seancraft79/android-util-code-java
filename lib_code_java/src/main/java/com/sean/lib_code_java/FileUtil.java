@@ -286,4 +286,37 @@ public class FileUtil {
     public static String getPathWithoutExtension(String filePath) {
         return filePath.substring(0, filePath.lastIndexOf("."));
     }
+
+    /**
+     * Assets 폴더의 파일을 Storage 에 복사
+     */
+    public static boolean writeAssetFileToStorage(Context context, String assetFileName, String folderPath) {
+        try {
+            final String filePath = folderPath + File.separator + assetFileName;
+
+            File file = new File(filePath);
+
+            if(file.exists()) {
+                file.delete();
+                Log.d(TAG, "[writeAssetFileToStorage] 기존 파일 삭제");
+            }
+
+            InputStream inputStream = context.getAssets().open(assetFileName);
+            OutputStream outputStream = new FileOutputStream(filePath);
+            byte[] mBuffer = new byte[1024];
+            int len;
+            while ((len = inputStream.read(mBuffer)) > 0)
+                outputStream.write(mBuffer, 0, len);
+
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+            return true;
+
+        } catch (Exception e) {
+            Log.e(TAG, "[writeAssetFileToStorage] error : " + e.getMessage());
+        }
+        return false;
+    }
 }
