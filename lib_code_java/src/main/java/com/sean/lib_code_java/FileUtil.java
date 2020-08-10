@@ -6,6 +6,8 @@ import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -298,7 +300,6 @@ public class FileUtil {
 
             if(file.exists()) {
                 file.delete();
-                Log.d(TAG, "[writeAssetFileToStorage] 기존 파일 삭제");
             }
 
             InputStream inputStream = context.getAssets().open(assetFileName);
@@ -315,7 +316,7 @@ public class FileUtil {
             return true;
 
         } catch (Exception e) {
-            Log.e(TAG, "[writeAssetFileToStorage] error : " + e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
