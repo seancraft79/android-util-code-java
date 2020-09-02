@@ -142,6 +142,23 @@ public class FileUtil {
     }
 
     /**
+     * Delete all files except folder
+     * @param folderPath
+     * @return
+     */
+    public static int cleanDirectory(String folderPath) {
+        File dir = new File(folderPath);
+        File[] files = dir.listFiles();
+        if(files == null || files.length < 1) return 0;
+        int count = 0;
+        for(File file: files)
+            if (!file.isDirectory())
+                if(file.delete()) count++;
+
+        return count;
+    }
+
+    /**
      * 디렉토리와 피해야 할 확장자명을 가진 파일을 제외한 파일들 중 지정한 범위의 날짜가 포함된 파일명을 가진 파일들 삭제
      * @param folderPath : 삭제하고자 하는 파일이 있는 폴더
      * @param deleteFromPreDay : 삭제하고자 하는 날짜의 시작 (예 : 30을 주면 오늘부터 30일 전부터 이전 파일들 삭제)
